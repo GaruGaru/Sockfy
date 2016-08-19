@@ -4,6 +4,7 @@ import Server.Client.Handling.Answerer;
 import Server.Client.Managing.Impl.ClientsManager;
 import Server.Client.Managing.Interfaces.IClientsManager;
 import Server.Logging.Loggy;
+import Server.Server.Handlers.ExceptionHandler;
 import Server.Server.Middlewares.Middleware;
 import Server.Server.Middlewares.RequestExecutor;
 import Server.Server.Middlewares.RequestProcessor;
@@ -18,6 +19,15 @@ public class Sockfy extends ServerImpl {
 
     private static final Logger LOG = Loggy.get(Sockfy.class);
 
+    protected Sockfy() {
+        super(0);
+    }
+
+
+    protected Sockfy(int port) {
+        super(port);
+    }
+
     public static Sockfy create() {
         Sockfy socky = new Sockfy();
         socky.manageWith(ClientsManager.create());
@@ -25,25 +35,17 @@ public class Sockfy extends ServerImpl {
         return socky;
     }
 
-    protected Sockfy() {
-        super(0);
-    }
-
-    protected Sockfy(int port) {
-        super(port);
-    }
-
     public Sockfy filter(Middleware middleware) {
         addMiddleware(middleware);
         return this;
     }
 
-    public Sockfy execute(RequestExecutor processor){
+    public Sockfy execute(RequestExecutor processor) {
         getClientsManager().executeWith(processor);
         return this;
     }
 
-    public Sockfy process(RequestProcessor processor){
+    public Sockfy process(RequestProcessor processor) {
         getClientsManager().processWith(processor);
         return this;
     }
@@ -55,6 +57,11 @@ public class Sockfy extends ServerImpl {
 
     public Sockfy onPort(int port) {
         setPort(port);
+        return this;
+    }
+
+    public Sockfy onError(ExceptionHandler exceptionHandler) {
+        setExceptionHandler(exceptionHandler);
         return this;
     }
 

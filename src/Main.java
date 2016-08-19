@@ -1,4 +1,5 @@
 import Server.Logging.Loggy;
+import Server.Server.Handlers.ExceptionHandler;
 import Server.Server.Sockfy;
 
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ public class Main {
                 .execute((h, r) -> log.info(h + ": " + r))
                 .answer(message -> message)
                 .onPort(7777)
+                .onError(ExceptionHandler.RETRY)
                 .run();
     }
 

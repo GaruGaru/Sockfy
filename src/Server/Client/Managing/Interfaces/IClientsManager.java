@@ -18,6 +18,8 @@ public interface IClientsManager {
 
     void handle(Socket socket);
 
+    void clear();
+
     IClientsManager answerWith(Answerer answerer);
 
     Answerer getAnswerer();

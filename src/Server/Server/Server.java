@@ -1,6 +1,7 @@
 package Server.Server;
 
 import Server.Logging.Loggy;
+import Server.Server.Handlers.ExceptionHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,6 +14,8 @@ import java.util.logging.Logger;
 public abstract class Server {
 
     protected static final Logger LOG = Loggy.get(Sockfy.class);
+
+    private ExceptionHandler exceptionHandler = ExceptionHandler.PRINT;
 
     private ServerSocket serverSocket;
 
@@ -41,7 +44,7 @@ public abstract class Server {
             try {
                 onNewClient(serverSocket.accept());
             } catch (IOException e) {
-                e.printStackTrace();
+                getExceptionHandler().onException(this, e);
             }
         }
     }
@@ -50,8 +53,16 @@ public abstract class Server {
         try {
             this.serverSocket = new ServerSocket(getPort());
         } catch (IOException e) {
-            e.printStackTrace();
+            getExceptionHandler().onException(this, e);
         }
+    }
+
+    public ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
     }
 
     protected abstract void onNewClient(Socket accept);

@@ -29,13 +29,8 @@ public class ServerImpl extends Server {
         return middlewareList;
     }
 
-    public void setClientsManager(IClientsManager clientsManager) {
-        this.clientsManager = clientsManager;
-    }
-
     @Override
     protected void onNewClient(Socket clientsSocket) {
-
         if (middlewareList.stream().allMatch(middleware -> middleware.accept(clientsSocket)))
             this.clientsManager.handle(clientsSocket);
         else
@@ -46,6 +41,10 @@ public class ServerImpl extends Server {
         return clientsManager;
     }
 
+    public void setClientsManager(IClientsManager clientsManager) {
+        this.clientsManager = clientsManager;
+    }
+
     @Override
     void onListeningChanged(boolean status) {
         if (status)
@@ -54,5 +53,9 @@ public class ServerImpl extends Server {
             LOG.info("Server stopped");
     }
 
-
+    @Override
+    public void startListening() {
+        this.clientsManager.clear();
+        super.startListening();
+    }
 }

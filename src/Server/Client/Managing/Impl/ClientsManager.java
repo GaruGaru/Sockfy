@@ -16,19 +16,24 @@ import java.util.function.Function;
  */
 public class ClientsManager extends ClientManagerAbstract {
 
-    public static IClientsManager create() {
-        Answerer answerer = Answerer.EMPTY;
-        return new ClientsManager(answerer);
-    }
-
     private Function<Socket, IClientHandler> socketAdapter;
-
     private List<IClientHandler> clients;
 
     public ClientsManager(Answerer answerer) {
         super(answerer);
         this.clients = new LinkedList<>();
         this.socketAdapter = new SocketClientListenerAdapter(this);
+    }
+
+    public static IClientsManager create() {
+        Answerer answerer = Answerer.EMPTY;
+        return new ClientsManager(answerer);
+    }
+
+    @Override
+    public void clear() {
+        clients.forEach(this::onDisconnected);
+        clients.clear();
     }
 
     @Override
