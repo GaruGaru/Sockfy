@@ -50,7 +50,7 @@
                 .run();
 ```
 
- # Requests filtering
+# Request filtering
 
 ``` Java
     Sockfy.create()
