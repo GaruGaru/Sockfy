@@ -20,6 +20,16 @@
                 .run();
 ```
 
+## Exceptions handling
+
+``` Java
+        Sockfy.create()
+                .answer(message -> message)
+                .onError(ExceptionHandler.RETRY)
+                .onPort(7777)
+                .run();
+```
+
 ## Connections Filtering
 
 ``` Java
